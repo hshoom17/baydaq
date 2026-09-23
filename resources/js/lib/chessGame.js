@@ -116,7 +116,10 @@ export function initChessGame() {
     note = '';
   }
 
-  // Easy opponent: two-ply search on material plus a little positional sense, with noise.
+  // Easy opponent: looks one move ahead only (it never sees your reply, so it leaves
+  // pieces hanging), adds plenty of noise, and sometimes plays a random move.
+  var BLUNDER_RATE = 0.2;
+  var NOISE = 150;
   var VAL = { p: 100, n: 320, b: 330, r: 500, q: 900, k: 0 };
   function evaluate() {
     var b = game.board(), s = 0;
@@ -132,23 +135,15 @@ export function initChessGame() {
     return s;
   }
   function pickMove() {
+    var moves = game.moves();
+    if (!moves.length) return null;
+    if (Math.random() < BLUNDER_RATE) return moves[Math.floor(Math.random() * moves.length)];
     var best = null, bestScore = Infinity;
-    game.moves().forEach(function (m) {
+    moves.forEach(function (m) {
       game.move(m);
-      var replies = game.moves(), score;
-      if (!replies.length) {
-        score = game.isCheckmate() ? -100000 : 0;
-      } else {
-        score = -Infinity;
-        for (var i = 0; i < replies.length; i++) {
-          game.move(replies[i]);
-          var e = evaluate();
-          game.undo();
-          if (e > score) score = e;
-        }
-      }
+      var score = game.isCheckmate() ? -100000 : evaluate();
       game.undo();
-      score += Math.random() * 40;
+      score += Math.random() * NOISE;
       if (score < bestScore) { bestScore = score; best = m; }
     });
     return best;

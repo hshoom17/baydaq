@@ -245,6 +245,20 @@
     .board-frame { padding: 8px; }
     .coord { font-size: 8px; }
   }
+  /* Desktop: the whole first screen (copy + board + game bar) fits the window height.
+     65px = nav, 139px = game bar + moves log + gaps under the board. */
+  @media (min-width: 901px) {
+    .hero {
+      min-height: calc(100svh - 65px);
+      display: grid; align-content: center;
+      padding-block: clamp(20px, 4svh, 88px);
+    }
+    .hero h1 { font-size: clamp(52px, min(8.4vw, 13svh), 112px); }
+    .hero-copy { gap: clamp(14px, 3svh, 28px); }
+    .board-frame, .game-bar, .moves-log {
+      max-width: clamp(340px, calc(92svh - 208px), 520px);
+    }
+  }
 
   /* ---------- Stack strip ---------- */
   .stack { border-block: 1px solid var(--line); background: var(--glass); }
