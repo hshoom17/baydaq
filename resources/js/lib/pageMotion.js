@@ -60,7 +60,8 @@ export function initPageMotion() {
   }
   ['.hero', '#services', '#process', '#about', '#contact'].forEach(function (sel) {
     var sec = document.querySelector(sel);
-    if (!sec) return;
+    // Skip missing sections and bare anchors (the 3D story keeps #process as a 1px anchor).
+    if (!sec || sec.offsetHeight < 100) return;
     // Roughly one piece per 120px of section height, alternating sides, spread top to bottom.
     var count = Math.max(6, Math.round(sec.offsetHeight / 120));
     for (var i = 0; i < count; i++) {
@@ -90,7 +91,7 @@ export function initPageMotion() {
   var allPatches = [];
   Object.keys(PATCH_PLAN).forEach(function (sel) {
     var sec = document.querySelector(sel);
-    if (!sec) return;
+    if (!sec || sec.offsetHeight < 100) return;
     PATCH_PLAN[sel].forEach(function (d) {
       var p = document.createElement('span');
       p.className = 'bpatch ' + d[0];

@@ -1,4 +1,4 @@
-const SERVICES = [
+export const SERVICES = [
   {
     piece: 'queen', tag: 'Queen · الوزير', title: 'مواقع وتطبيقات',
     desc: 'نبني موقع شركتك، أو تطبيق جوال، أو نظاماً خاصاً لإدارة عملك، من التصميم حتى النشر.',

@@ -377,6 +377,181 @@
     .sq:nth-child(even) { background: var(--walnut); color: #1A0F06; }
   }
 
+  /* ---------- Services + process: one 3D board story (desktop) ---------- */
+  section.block.story {
+    --nav-h: 65px; --step: 55svh;
+    height: calc(100svh - var(--nav-h) + var(--stages) * var(--step));
+    padding-block: 0;
+  }
+  .story-anchor { position: absolute; top: calc(var(--stages) / 2 * var(--step)); width: 1px; height: 1px; }
+  .story-stage {
+    position: sticky; top: var(--nav-h);
+    height: calc(100svh - var(--nav-h));
+    display: grid; align-items: center;
+  }
+  .story-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: clamp(24px, 4vw, 56px);
+    align-items: center;
+  }
+  .story-text { display: grid; gap: clamp(18px, 3.2svh, 32px); align-content: center; }
+
+  /* Headings and cards share one cell; only the current one shows. */
+  .story-stack { display: grid; }
+  .story-stack > * {
+    grid-area: 1 / 1;
+    opacity: 0; visibility: hidden;
+    transform: translateY(18px);
+    transition: opacity .4s var(--ease-out, ease), transform .5s var(--ease-out, ease), visibility 0s .5s;
+  }
+  .story-stack > .on {
+    opacity: 1; visibility: visible; transform: none;
+    transition-delay: .1s, .1s, 0s;
+  }
+  .story-head { display: grid; gap: 12px; justify-items: start; }
+  .story-head h2 { font-size: clamp(34px, min(4.4vw, 7svh), 58px); font-weight: 800; }
+  .story-head p { color: var(--muted); max-width: 44ch; }
+
+  .story-card {
+    display: grid; gap: 10px; align-content: start;
+    padding: clamp(22px, 2.6vw, 32px);
+    background: linear-gradient(180deg, var(--panel), var(--panel-2));
+    border: 1px solid var(--line);
+    border-inline-start: 3px solid var(--brass-hi);
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 24px 44px -32px rgba(59, 36, 20, .5);
+  }
+  .story-card .who { color: var(--brass); }
+  .story-card h3 { font-size: clamp(22px, 2.1vw, 28px); font-weight: 700; }
+  .story-card p { color: var(--muted); font-size: 15.5px; }
+  .step-top { display: flex; align-items: baseline; gap: 14px; }
+  .step-num { font-size: clamp(40px, 4vw, 54px); font-weight: 900; line-height: 1; color: var(--brass); }
+  .step-phase { font-size: 14px; font-weight: 500; color: var(--faint); }
+  .story-card .step-get {
+    margin-top: 4px; padding-top: 12px;
+    border-top: 1px solid var(--line);
+    font-size: 14px; font-weight: 500; color: var(--ink);
+  }
+
+  /* Progress: two short ranks of squares; each one jumps to its stage. */
+  .story-progress { display: flex; flex-wrap: wrap; gap: 12px 32px; }
+  .story-progress > div { display: flex; align-items: center; gap: 6px; }
+  .story-progress .lbl { font-size: 13px; color: var(--faint); margin-inline-end: 6px; }
+  .story-progress button {
+    width: 24px; height: 24px; padding: 0;
+    border: 0; border-radius: 1px;
+    background: var(--ivory);
+    box-shadow: inset 0 0 0 1px rgba(59, 36, 20, .18);
+    cursor: pointer;
+    transition: transform .3s var(--ease-out, ease), box-shadow .3s;
+  }
+  .story-progress button:nth-of-type(even) { background: var(--walnut); }
+  .story-progress button.done { box-shadow: inset 0 0 0 1px rgba(59, 36, 20, .18), inset 0 0 0 7px rgba(214, 162, 78, .55); }
+  .story-progress button.on { transform: translateY(-3px); box-shadow: 0 0 0 2px var(--ground), 0 0 0 4px var(--brass-hi); }
+  .story-progress button:hover { transform: translateY(-3px); }
+
+  /* The board: tilted and turned by --rx / --rz, which the scroll sets. */
+  .story-scene {
+    height: calc(100svh - var(--nav-h));
+    display: grid; place-items: center;
+    perspective: 1600px; perspective-origin: 50% 35%;
+  }
+  .b3 {
+    --edge: 14px;
+    position: relative;
+    width: min(470px, 35vw, calc(100svh - var(--nav-h) - 190px));
+    aspect-ratio: 1;
+    transform-style: preserve-3d;
+    transform: rotateX(var(--rx, 58deg)) rotateZ(var(--rz, -30deg));
+  }
+  .b3 > span, .b3-grid { position: absolute; }
+  .b3-frame { inset: calc(-1 * var(--edge)); background: var(--frame); border-radius: 3px; transform: translateZ(-1px); }
+  .b3-edge { background: #24150A; }
+  .b3-edge.s { top: calc(100% + var(--edge)); left: calc(-1 * var(--edge)); right: calc(-1 * var(--edge)); height: 18px; transform-origin: top; transform: rotateX(-90deg); }
+  .b3-edge.n { bottom: calc(100% + var(--edge)); left: calc(-1 * var(--edge)); right: calc(-1 * var(--edge)); height: 18px; transform-origin: bottom; transform: rotateX(90deg); }
+  .b3-edge.e { left: calc(100% + var(--edge)); top: calc(-1 * var(--edge)); bottom: calc(-1 * var(--edge)); width: 18px; transform-origin: left; transform: rotateY(90deg); }
+  .b3-edge.w { right: calc(100% + var(--edge)); top: calc(-1 * var(--edge)); bottom: calc(-1 * var(--edge)); width: 18px; transform-origin: right; transform: rotateY(-90deg); }
+  /* Soft floor shadow: a flat layer behind the board, outside the 3D space so it never slices a piece. */
+  .story-scene > .b3, .story-scene > .b3-floor { grid-area: 1 / 1; }
+  .b3-floor {
+    width: 100%; height: 40%;
+    margin-top: 14%;
+    background: radial-gradient(closest-side, rgba(59, 36, 20, .26), rgba(59, 36, 20, .1) 55%, transparent);
+  }
+  .b3-grid { inset: 0; display: grid; grid-template-columns: repeat(8, 1fr); }
+  .c3 { background: var(--ivory); }
+  .c3.d { background: var(--walnut); }
+
+  .b3 .at {
+    left: calc(var(--c) * 12.5%); top: calc((7 - var(--r)) * 12.5%);
+    width: 12.5%; height: 12.5%;
+  }
+  .hl3, .dot3, .trail3 { transform: translateZ(1px); }
+  .hl3 { box-shadow: inset 0 0 0 3px rgba(214, 162, 78, 0); background: rgba(214, 162, 78, 0); transition: background .4s, box-shadow .4s; }
+  .hl3.on { background: rgba(242, 205, 126, .55); box-shadow: inset 0 0 0 3px rgba(185, 130, 49, .9); }
+  /* A gold ring spreads across the board as a piece lands. */
+  .hl3::after {
+    content: ""; position: absolute; inset: 0;
+    border: 2px solid rgba(214, 162, 78, .9);
+    opacity: 0;
+  }
+  .hl3.on::after { animation: ring3 1.1s var(--ease-out, ease) .25s both; }
+  @keyframes ring3 {
+    from { transform: scale(.7); opacity: 1; }
+    to { transform: scale(3.2); opacity: 0; }
+  }
+  .dot3 { display: grid; place-items: center; }
+  .dot3::after {
+    content: ""; width: 28%; aspect-ratio: 1; border-radius: 50%;
+    background: rgba(110, 69, 12, .7);
+    transform: scale(0);
+    transition: transform .3s var(--ease-out, ease);
+  }
+  .dot3.on::after { transform: scale(1); transition: transform .4s var(--ease-spring, ease) var(--dl, 0s); }
+  .trail3 { display: grid; place-items: center; background: rgba(214, 162, 78, 0); transition: background .5s; }
+  .trail3.on { background: rgba(214, 162, 78, .42); }
+  .trail3.now { background: rgba(242, 205, 126, .7); box-shadow: inset 0 0 0 3px rgba(185, 130, 49, .9); }
+  .trail3 b { font: 900 clamp(18px, 2vw, 26px)/1 var(--f-sans); color: var(--frame); opacity: 0; transition: opacity .5s; }
+  .trail3.on:not(.now) b { opacity: .75; }
+
+  /* Pieces stand up facing the camera: undo the board's turn and tilt. */
+  .b3 .p3 { transform-style: preserve-3d; transition: left .7s var(--ease-out, ease), top .7s var(--ease-out, ease); }
+  .p3 { --s: 0; --lift: 0%; }
+  .p3.up { --s: 1; }
+  .p3.act { --lift: -16%; }
+  .p3-shadow {
+    position: absolute; inset: 14%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(26, 17, 10, .5), transparent);
+    transform: translateZ(1.5px) scale(var(--s));
+    transition: transform .5s var(--ease-out, ease);
+  }
+  .p3-fig {
+    /* Taller than the piece: the browser clips 3D layers to their box, and the lift needs headroom. */
+    position: absolute; left: -40%; bottom: 42%; width: 180%; aspect-ratio: 1 / 1.35;
+    transform-origin: 50% 100%;
+    transform: rotateZ(calc(-1 * var(--rz, -30deg))) rotateX(calc(-1 * var(--rx, 58deg)));
+  }
+  .p3-body {
+    position: absolute; left: 0; bottom: 0;
+    display: block; width: 100%; aspect-ratio: 1;
+    transform-origin: 50% 100%;
+    transform: translateY(var(--lift)) scale(var(--s));
+    transition: transform .6s var(--ease-spring, ease);
+  }
+  .p3-body svg {
+    width: 100%; height: 100%;
+    fill: var(--ebony); stroke: var(--ebony); stroke-width: 1.5; stroke-linejoin: round;
+    --pd: var(--ivory);
+    filter: drop-shadow(0 3px 2px rgba(0, 0, 0, .3));
+    transition: filter .4s;
+  }
+  .p3.act .p3-body svg { filter: drop-shadow(0 3px 2px rgba(0, 0, 0, .3)) drop-shadow(0 0 10px rgba(242, 205, 126, .9)); }
+  /* The walking pawn is the logo mark, which carries its own colours. */
+  .p3.pawn .p3-body svg { stroke: none; }
+  .p3.pawn .p3-fig { left: -55%; width: 210%; }
+
   /* ---------- Heritage ---------- */
   .about-grid {
     display: grid;
